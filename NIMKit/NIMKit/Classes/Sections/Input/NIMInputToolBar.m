@@ -51,11 +51,8 @@
         _recordButton.exclusiveTouch = YES;
         [_recordButton sizeToFit];
         
-        _xcEmoticonBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_normal"] forState:UIControlStateNormal];
-        [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_pressed"] forState:UIControlStateHighlighted];
-        
         _inputTextBkgImage = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _inputTextBkgImage.backgroundColor = [UIColor redColor];
         [_inputTextBkgImage setImage:[[UIImage nim_imageInKit:@"icon_input_text_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(15,80,15,80) resizingMode:UIImageResizingModeStretch]];
         
         _inputTextView = [[NIMGrowingTextView alloc] initWithFrame:CGRectZero];
@@ -63,25 +60,30 @@
         _inputTextView.maxNumberOfLines = _maxNumberOfInputLines?:4;
         _inputTextView.minNumberOfLines = 1;
         _inputTextView.textColor = [UIColor blackColor];
-        _inputTextView.backgroundColor = [UIColor clearColor];
+        _inputTextView.backgroundColor = [UIColor greenColor];
         _inputTextView.nim_size = [_inputTextView intrinsicContentSize];
         _inputTextView.textViewDelegate = self;
         _inputTextView.returnKeyType = UIReturnKeySend;
         
-        [self addSubview:self.emoticonBtn];
+        _xcEmoticonBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_normal"] forState:UIControlStateNormal];
+        [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_pressed"] forState:UIControlStateHighlighted];
+        [self addSubview:_xcEmoticonBtn];
+        
         //不需要
+        /*
         //顶部分割线
-//        UIView *sep = [[UIView alloc] initWithFrame:CGRectZero];
-//        sep.backgroundColor = [UIColor lightGrayColor];
-//        sep.nim_size = CGSizeMake(self.nim_width, .5f);
-//        sep.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//        [self addSubview:sep];
+        UIView *sep = [[UIView alloc] initWithFrame:CGRectZero];
+        sep.backgroundColor = [UIColor lightGrayColor];
+        sep.nim_size = CGSizeMake(self.nim_width, .5f);
+        sep.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self addSubview:sep];
         
         //底部分割线
         _bottomSep = [[UIView alloc] initWithFrame:CGRectZero];
         _bottomSep.backgroundColor = [UIColor lightGrayColor];
         [self addSubview:_bottomSep];
-        
+        **/
         self.types = @[
                          @(NIMInputBarItemTypeVoice),
                          @(NIMInputBarItemTypeTextAndRecord),
@@ -144,7 +146,7 @@
         textViewWidth += view.nim_width;
     }
     textViewWidth += (self.spacing * (self.types.count + 1));
-    self.inputTextView.nim_width  = width  - textViewWidth - 2 * self.textViewPadding;
+    self.inputTextView.nim_width  = width  - textViewWidth -  self.textViewPadding - self.textViewRightPadding;
 }
 
 
@@ -152,7 +154,7 @@
     [super layoutSubviews];
     
     if ([self.types containsObject:@(NIMInputBarItemTypeTextAndRecord)]) {
-        self.inputTextBkgImage.nim_width  = self.inputTextView.nim_width  + 2 * self.textViewPadding;
+        self.inputTextBkgImage.nim_width  = self.inputTextView.nim_width  +  self.textViewPadding + self.textViewRightPadding;
         self.inputTextBkgImage.nim_height = self.inputTextView.nim_height + 2 * self.textViewPadding;
     }
     CGFloat left = 0;
@@ -170,10 +172,16 @@
     
     [self adjustTextAndRecordView];
     
+    CGFloat xcEmoticonBtnLeft = _inputTextBkgImage.nim_right - 24 - 8;
+    CGFloat xcEmoticonBtnTop = _inputTextBkgImage.nim_top + 5;
+    _xcEmoticonBtn.frame = CGRectMake(xcEmoticonBtnLeft, xcEmoticonBtnTop, 24, 24);
+    [self bringSubviewToFront:_xcEmoticonBtn];
+    /*
     //底部分割线
     CGFloat sepHeight = .5f;
     _bottomSep.nim_size     = CGSizeMake(self.nim_width, sepHeight);
     _bottomSep.nim_bottom   = self.nim_height - sepHeight;
+     **/
 }
 
 
@@ -181,10 +189,10 @@
 {
     if ([self.types containsObject:@(NIMInputBarItemTypeTextAndRecord)])
     {
-        self.inputTextView.center  = self.inputTextBkgImage.center;
-        
         if (!self.inputTextView.superview)
         {
+            self.inputTextView.center  = self.inputTextBkgImage.center;
+            self.inputTextView.nim_left = self.inputTextBkgImage.nim_left + self.textViewPadding;
             //输入框
             [self addSubview:self.inputTextView];
         }
@@ -332,6 +340,11 @@
 - (CGFloat)textViewPadding
 {
     return 3.f;
+}
+
+- (CGFloat)textViewRightPadding
+{
+    return 35.f;
 }
 
 
