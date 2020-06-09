@@ -51,6 +51,10 @@
         _recordButton.exclusiveTouch = YES;
         [_recordButton sizeToFit];
         
+        _xcEmoticonBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_normal"] forState:UIControlStateNormal];
+        [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_pressed"] forState:UIControlStateHighlighted];
+        
         _inputTextBkgImage = [[UIImageView alloc] initWithFrame:CGRectZero];
         [_inputTextBkgImage setImage:[[UIImage nim_imageInKit:@"icon_input_text_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(15,80,15,80) resizingMode:UIImageResizingModeStretch]];
         
@@ -64,12 +68,14 @@
         _inputTextView.textViewDelegate = self;
         _inputTextView.returnKeyType = UIReturnKeySend;
         
+        [self addSubview:self.emoticonBtn];
+        //不需要
         //顶部分割线
-        UIView *sep = [[UIView alloc] initWithFrame:CGRectZero];
-        sep.backgroundColor = [UIColor lightGrayColor];
-        sep.nim_size = CGSizeMake(self.nim_width, .5f);
-        sep.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self addSubview:sep];
+//        UIView *sep = [[UIView alloc] initWithFrame:CGRectZero];
+//        sep.backgroundColor = [UIColor lightGrayColor];
+//        sep.nim_size = CGSizeMake(self.nim_width, .5f);
+//        sep.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//        [self addSubview:sep];
         
         //底部分割线
         _bottomSep = [[UIView alloc] initWithFrame:CGRectZero];
