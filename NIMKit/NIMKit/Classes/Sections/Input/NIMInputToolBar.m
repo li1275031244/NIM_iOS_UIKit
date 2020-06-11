@@ -69,14 +69,14 @@
         [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"ic_biaoqing_chat"] forState:UIControlStateNormal];
         [self addSubview:_xcEmoticonBtn];
         
-        //顶部分割线
-        UIView *sep = [[UIView alloc] initWithFrame:CGRectZero];
-        sep.backgroundColor = [UIColor lightGrayColor];
-        sep.nim_size = CGSizeMake(self.nim_width, .5f);
-        sep.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self addSubview:sep];
+         //不需要
+//        //顶部分割线
+//        UIView *sep = [[UIView alloc] initWithFrame:CGRectZero];
+//        sep.backgroundColor = [UIColor lightGrayColor];
+//        sep.nim_size = CGSizeMake(self.nim_width, .5f);
+//        sep.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//        [self addSubview:sep];
         
-        //不需要
         //底部分割线
 //        _bottomSep = [[UIView alloc] initWithFrame:CGRectZero];
 //        _bottomSep.backgroundColor = [UIColor lightGrayColor];

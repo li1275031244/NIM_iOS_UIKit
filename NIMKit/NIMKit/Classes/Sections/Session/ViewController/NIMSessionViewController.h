@@ -115,7 +115,7 @@
  */
 - (id<NIMSessionConfig>)sessionConfig;
 
-
+-(void)showPicker;
 #pragma mark - 消息接口
 /**
  *  发送消息
