@@ -184,6 +184,7 @@
     
     _toolBar.delegate = self;
     [_toolBar.emoticonBtn addTarget:self action:@selector(onTouchEmoticonBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBar.xcEmoticonBtn addTarget:self action:@selector(onTouchEmoticonBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.moreMediaBtn addTarget:self action:@selector(onTouchMoreBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.voiceButton addTarget:self action:@selector(onTouchVoiceBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.recordButton addTarget:self action:@selector(onTouchRecordBtnDown:) forControlEvents:UIControlEventTouchDown];
@@ -322,7 +323,7 @@
         {
             //这个时候需要一个动画来模拟键盘
             [UIView animateWithDuration:0.25 delay:0 options:7 animations:^{
-                [_inputDelegate didChangeInputHeight:self.nim_height];
+                [self->_inputDelegate didChangeInputHeight:self.nim_height];
             } completion:nil];
         }
         else
@@ -400,11 +401,12 @@
                 }
                 else {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [[[UIAlertView alloc] initWithTitle:nil
-                                                    message:@"没有麦克风权限".nim_localized
-                                                   delegate:nil
-                                          cancelButtonTitle:@"确定".nim_localized
-                                          otherButtonTitles:nil] show];
+                        // ToDo:
+//                        [[[UIAlertView alloc] initWithTitle:nil
+//                                                    message:@"没有麦克风权限".nim_localized
+//                                                   delegate:nil
+//                                          cancelButtonTitle:@"确定".nim_localized
+//                                          otherButtonTitles:nil] show];
                     });
                 }
             }];

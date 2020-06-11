@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger,NIMInputStatus)
 @property (nonatomic,strong) UIButton    *moreMediaBtn;
 
 @property (nonatomic,strong) UIButton    *recordButton;
-//add
+
 @property (nonatomic,strong) UIButton    *xcEmoticonBtn;
 
 @property (nonatomic,strong) UIImageView *inputTextBkgImage;
