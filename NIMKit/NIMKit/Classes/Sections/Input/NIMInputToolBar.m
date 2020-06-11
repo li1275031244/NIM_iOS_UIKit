@@ -255,8 +255,8 @@
 
 - (void)updateVoiceBtnImages:(BOOL)selected
 {
-    [self.voiceButton setImage:selected?[UIImage nim_imageInKit:@"icon_toolview_voice_normal"]:[UIImage nim_imageInKit:@"icon_toolview_keyboard_normal"] forState:UIControlStateNormal];
-    [self.voiceButton setImage:selected?[UIImage nim_imageInKit:@"icon_toolview_voice_pressed"]:[UIImage nim_imageInKit:@"icon_toolview_keyboard_pressed"] forState:UIControlStateHighlighted];
+    [self.voiceButton setImage:selected?[UIImage nim_imageInKit:@"ic_jianghua_chat"]:[UIImage nim_imageInKit:@"ic_jianghua_chat"] forState:UIControlStateNormal];
+    [self.voiceButton setImage:selected?[UIImage nim_imageInKit:@"ic_jianghua_chat"]:[UIImage nim_imageInKit:@"ic_jianghua_chat"] forState:UIControlStateHighlighted];
 }
 
 - (void)updateEmotAndTextBtnImages:(BOOL)selected
