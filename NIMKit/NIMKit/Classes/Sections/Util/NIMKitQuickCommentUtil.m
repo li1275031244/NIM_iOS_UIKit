@@ -18,7 +18,7 @@ static const CGFloat kHeightPerRow = 25.0;
 static NSInteger kMaxWidthPerRow = 0;
 const CGFloat NIMKitCommentUtilCellPadding = 2.f;
 const CGFloat NIMKitCommentUtilCellContentPadding = 5.f;
-NSString  * const NIMKitQuickCommentFormat = @"emoticon_emoji_%02ld";
+NSString  * const NIMKitQuickCommentFormat = @"emoticon_emoji_%02lld";
 
 
 @implementation NIMKitQuickCommentUtil
