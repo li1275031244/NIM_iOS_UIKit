@@ -29,8 +29,8 @@
         [self setBackgroundColor:[UIColor whiteColor]];
         
         _voiceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_voiceButton setImage:[UIImage nim_imageInKit:@"icon_toolview_voice_normal"] forState:UIControlStateNormal];
-        [_voiceButton setImage:[UIImage nim_imageInKit:@"icon_toolview_voice_pressed"] forState:UIControlStateHighlighted];
+        [_voiceButton setImage:[UIImage nim_imageInKit:@"ic_jianghua_chat"] forState:UIControlStateNormal];
+        [_voiceButton setImage:[UIImage nim_imageInKit:@"ic_jianghua_chat"] forState:UIControlStateHighlighted];
         [_voiceButton sizeToFit];
         
         _emoticonBtn = [UIButton buttonWithType:UIButtonTypeCustom];
