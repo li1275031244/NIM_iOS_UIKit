@@ -325,7 +325,8 @@
                   @(NIMInputBarItemTypeVoice) : self.voiceButton,
                   @(NIMInputBarItemTypeTextAndRecord)  : self.inputTextBkgImage,
                   @(NIMInputBarItemTypeEmoticon) : self.emoticonBtn,
-                  @(NIMInputBarItemTypeMore)     : self.moreMediaBtn
+                  @(NIMInputBarItemTypeMore)     : self.moreMediaBtn,
+                  @(NIMInputBarItemTypeGift) : self.xcGiftBtn
                 };
     }
     return _dict[@(type)];
