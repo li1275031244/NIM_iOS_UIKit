@@ -185,6 +185,7 @@
     _toolBar.delegate = self;
     [_toolBar.emoticonBtn addTarget:self action:@selector(onTouchEmoticonBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.xcEmoticonBtn addTarget:self action:@selector(onTouchEmoticonBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBar.xcGiftBtn addTarget:self action:@selector(onTouchGiftBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.moreMediaBtn addTarget:self action:@selector(onTouchMoreBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.voiceButton addTarget:self action:@selector(onTouchVoiceBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.recordButton addTarget:self action:@selector(onTouchRecordBtnDown:) forControlEvents:UIControlEventTouchDown];
@@ -467,6 +468,12 @@
     {
         [self refreshStatus:NIMInputStatusText];
         self.toolBar.showsKeyboard = YES;
+    }
+}
+
+-(void)onTouchGiftBtn:(id)sender {
+    if ([self.actionDelegate respondsToSelector:@selector(onTapGiftBtn:)]) {
+        [self.actionDelegate onTapGiftBtn:sender];
     }
 }
 

@@ -35,6 +35,8 @@
 
 - (void)onTapEmoticonBtn:(id)sender;
 
+- (void)onTapGiftBtn:(id)sender;
+
 - (void)onTapVoiceBtn:(id)sender;
 
 - (void)didReplyCancelled;

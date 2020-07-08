@@ -38,6 +38,11 @@
         [_emoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_pressed"] forState:UIControlStateHighlighted];
         [_emoticonBtn sizeToFit];
         
+        _xcGiftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_xcGiftBtn setImage:[UIImage nim_imageInKit:@"ic_mine_meili"] forState:UIControlStateNormal];
+        [_xcGiftBtn setImage:[UIImage nim_imageInKit:@"ic_mine_meili"] forState:UIControlStateHighlighted];
+        [_xcGiftBtn sizeToFit];
+        
         _moreMediaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_moreMediaBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_add_normal"] forState:UIControlStateNormal];
         [_moreMediaBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_add_pressed"] forState:UIControlStateHighlighted];
@@ -87,6 +92,7 @@
                          @(NIMInputBarItemTypeTextAndRecord),
                          @(NIMInputBarItemTypeEmoticon),
                          @(NIMInputBarItemTypeMore),
+                         @(NIMInputBarItemTypeGift),
                        ];
     }
     return self;
