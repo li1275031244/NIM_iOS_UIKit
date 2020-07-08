@@ -68,7 +68,7 @@
         _inputTextView.textViewDelegate = self;
         _inputTextView.returnKeyType = UIReturnKeySend;
 
-        [self addSubview:self.emoticonBtn];
+//        [self addSubview:self.emoticonBtn];
         
         _xcEmoticonBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_xcEmoticonBtn setImage:[UIImage nim_imageInKit:@"ic_biaoqing_chat"] forState:UIControlStateNormal];
