@@ -475,6 +475,14 @@
     if ([self.actionDelegate respondsToSelector:@selector(onTapGiftBtn:)]) {
         [self.actionDelegate onTapGiftBtn:sender];
     }
+    
+    [self.emoticonContainer setHidden:YES];
+    [self.moreContainer setHidden:YES];
+    
+    if (self.toolBar.showsKeyboard)
+    {
+        self.toolBar.showsKeyboard = NO;
+    }
 }
 
 - (void)onTouchMoreBtn:(id)sender {
