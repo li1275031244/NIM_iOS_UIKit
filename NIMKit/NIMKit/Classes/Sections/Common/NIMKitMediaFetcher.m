@@ -26,9 +26,9 @@
 
 @property (nonatomic,copy)   NIMKitCameraFetchResult  cameraResultHandler;
 
-@property (nonatomic,strong) UIImagePickerController  *imagePicker;
+@property (nonatomic,weak) UIImagePickerController  *imagePicker;
 
-@property (nonatomic,strong) NIMKitMediaPickerController  *assetsPicker;
+@property (nonatomic,weak) NIMKitMediaPickerController  *assetsPicker;
 
 @end
 
@@ -72,23 +72,35 @@
         NSAssert(0, @"not supported");
 #elif TARGET_OS_IPHONE
         
-        BOOL allowMovie = [_mediaTypes containsObject:(NSString *)kUTTypeMovie];
-        BOOL allowPhoto = [_mediaTypes containsObject:(NSString *)kUTTypeImage];
-        if (allowMovie && !allowPhoto) {
-            self.imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
-        } else {
-            self.imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-        }
-        self.imagePicker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+        UIImagePickerController *imagePicker = [self setupImagePicker];
         UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
         rootVC.modalPresentationStyle = UIModalPresentationFullScreen;
         if (rootVC.presentedViewController) {
-            [rootVC.presentedViewController presentViewController:self.imagePicker animated:YES completion:nil];
+            [rootVC.presentedViewController presentViewController:imagePicker animated:YES completion:nil];
         } else {
-            [rootVC presentViewController:self.imagePicker animated:YES completion:nil];
+            [rootVC presentViewController:imagePicker animated:YES completion:nil];
         }
+        
+        _imagePicker = imagePicker;
 #endif
     }
+}
+
+- (UIImagePickerController *)setupImagePicker {
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    imagePicker.mediaTypes = self.mediaTypes;
+    
+    BOOL allowMovie = [_mediaTypes containsObject:(NSString *)kUTTypeMovie];
+    BOOL allowPhoto = [_mediaTypes containsObject:(NSString *)kUTTypeImage];
+    if (allowMovie && !allowPhoto) {
+        imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
+    } else {
+        imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+    }
+    imagePicker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+    return imagePicker;
 }
 
 
@@ -106,14 +118,14 @@
                 if(handler) handler(nil);
             }
             if (status == PHAuthorizationStatusAuthorized) {
-                NIMKitMediaPickerController *vc = [[NIMKitMediaPickerController alloc] initWithMaxImagesCount:self.limit delegate:weakSelf];
+                NIMKitMediaPickerController *vc = [[NIMKitMediaPickerController alloc] initWithMaxImagesCount:weakSelf.limit delegate:weakSelf];
                 vc.naviBgColor = [UIColor blackColor];
                 vc.naviTitleColor = [UIColor whiteColor];
                 vc.barItemTextColor = [UIColor whiteColor];
                 vc.navigationBar.barStyle = UIBarStyleDefault;
-                vc.allowPickingVideo = [_mediaTypes containsObject:(NSString *)kUTTypeMovie];
-                vc.allowPickingImage = [_mediaTypes containsObject:(NSString *)kUTTypeImage];
-                vc.allowPickingGif = [_mediaTypes containsObject:(NSString *)kUTTypeGIF];
+                vc.allowPickingVideo = [weakSelf.mediaTypes containsObject:(NSString *)kUTTypeMovie];
+                vc.allowPickingImage = [weakSelf.mediaTypes containsObject:(NSString *)kUTTypeImage];
+                vc.allowPickingGif = [weakSelf.mediaTypes containsObject:(NSString *)kUTTypeGIF];
                 if(handler) handler(vc);
             }
         });
@@ -125,6 +137,7 @@
     NSString *mediaType = info[UIImagePickerControllerMediaType];
     if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
         
+        __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *inputURL  = [info objectForKey:UIImagePickerControllerMediaURL];
             NSString *outputFileName = [NIMKitFileLocationHelper genFilenameWithExt:@"mp4"];
@@ -139,20 +152,20 @@
             [session exportAsynchronouslyWithCompletionHandler:^(void)
              {
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     if (!self.cameraResultHandler)
+                     if (!weakSelf.cameraResultHandler)
                      {
                          return;
                      }
                      
                      if (session.status == AVAssetExportSessionStatusCompleted)
                      {
-                         self.cameraResultHandler(outputPath,nil);
+                         weakSelf.cameraResultHandler(outputPath,nil);
                      }
                      else
                      {
-                         self.cameraResultHandler(nil,nil);
+                         weakSelf.cameraResultHandler(nil,nil);
                      }
-                     self.cameraResultHandler = nil;
+                     weakSelf.cameraResultHandler = nil;
                  });
              }];
             
@@ -215,7 +228,6 @@
             [assets removeObjectAtIndex:0];
             [weakSelf requestAssets:assets];
         })
-        
     }];
 }
 
@@ -223,33 +235,22 @@
 {
     if (asset.mediaType == PHAssetMediaTypeVideo) {
         
-        PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
-        options.version = PHVideoRequestOptionsVersionCurrent;
-        options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
-        
-
-        [[PHImageManager defaultManager] requestExportSessionForVideo:asset options:options exportPreset:AVAssetExportPresetHighestQuality resultHandler:^(AVAssetExportSession * _Nullable exportSession, NSDictionary * _Nullable info) {
-
-            NSString *outputFileName = [NIMKitFileLocationHelper genFilenameWithExt:@"mp4"];
-            NSString *outputPath = [NIMKitFileLocationHelper filepathForVideo:outputFileName];
-
-            exportSession.outputURL = [NSURL fileURLWithPath:outputPath];
-            exportSession.outputFileType = AVFileTypeMPEG4;
-            exportSession.shouldOptimizeForNetworkUse = YES;
-            [exportSession exportAsynchronouslyWithCompletionHandler:^(void)
-             {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     if (exportSession.status == AVAssetExportSessionStatusCompleted)
-                     {
-                         handler(outputPath, PHAssetMediaTypeVideo);
-                     }
-                     else
-                     {
-                         handler(nil,PHAssetMediaTypeVideo);
-                     }
-                 });
-             }];
-        }];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+            options.version = PHVideoRequestOptionsVersionCurrent;
+            options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
+            
+            [PHImageManager.defaultManager requestAVAssetForVideo:asset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+                AVURLAsset *URLAsset = (AVURLAsset *)asset;
+                NSString *outputFileName = [NIMKitFileLocationHelper genFilenameWithExt:@"mp4"];
+                NSString *outputPath = [NIMKitFileLocationHelper filepathForVideo:outputFileName];
+                NSError *error;
+                [NSFileManager.defaultManager copyItemAtURL:URLAsset.URL toURL:[NSURL fileURLWithPath:outputPath] error:&error];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(!error ? outputPath : nil, PHAssetMediaTypeVideo);
+                });
+            }];
+        });
     }
     
     if (asset.mediaType == PHAssetMediaTypeImage)
@@ -351,10 +352,6 @@
         return NO;
         
     }
-    self.imagePicker = [[UIImagePickerController alloc] init];
-    self.imagePicker.delegate = self;
-    self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    self.imagePicker.mediaTypes = self.mediaTypes;
     return YES;
 }
 
@@ -362,10 +359,11 @@
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc]init];
     option.networkAccessAllowed = YES;
     option.synchronous = YES;
+    __weak typeof(self) weakSelf = self;
     [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFit options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
         if (downloadFinined && result) {
-            result = [self fixOrientation:result];
+            result = [weakSelf fixOrientation:result];
             BOOL isDegraded = [[info objectForKey:PHImageResultIsDegradedKey] boolValue];
             if (completion) completion(result,info,isDegraded);
         }
