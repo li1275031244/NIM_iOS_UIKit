@@ -70,6 +70,7 @@
 
 - (void)resetLayout
 {
+    [self adjustInputHeaderView];
     [self adjustInputView];
     [self adjustTableView];
 }
@@ -91,6 +92,17 @@
     }
 }
 
+
+- (void)adjustInputHeaderView
+{
+    UIView *superView = self.inputHeaderView.superview;
+    UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
+    if (@available(iOS 11.0, *))
+    {
+        safeAreaInsets = superView.safeAreaInsets;
+    }
+    self.inputHeaderView.nim_bottom = superView.nim_height - safeAreaInsets.bottom - self.inputView.nim_height;
+}
 
 - (void)adjustInputView
 {
@@ -117,9 +129,9 @@
     
     CGFloat containerSafeHeight = self.tableView.superview.frame.size.height - safeAreaInsets.bottom;
     
-    rect.size.height = containerSafeHeight - self.inputView.toolBar.nim_height;
+    rect.size.height = containerSafeHeight - self.inputView.toolBar.nim_height - self.inputHeaderView.nim_height;
     
-    
+
     //tableview 的内容 inset
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     CGFloat visiableHeight = 0;

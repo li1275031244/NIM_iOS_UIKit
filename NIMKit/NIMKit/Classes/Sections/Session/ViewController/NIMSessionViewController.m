@@ -55,8 +55,6 @@
 {
     [self removeListener];
     
-    [self.sessionInputView removeObserver:self forKeyPath:@"frame"];
-    
     _tableView.delegate = nil;
     _tableView.dataSource = nil;
 }
@@ -128,19 +126,9 @@
         [self.view addSubview:_sessionInputView];
         
         self.sessionInputHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.nim_width, 40)];
-        self.sessionInputHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        self.sessionInputHeaderView.backgroundColor = [UIColor clearColor];
+        self.sessionInputHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        self.sessionInputHeaderView.backgroundColor = [UIColor redColor];
         [self.view addSubview:_sessionInputHeaderView];
-        
-        [self.sessionInputView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (object == self.sessionInputView) {
-        CGRect frame = [[change objectForKey:NSKeyValueChangeNewKey] CGRectValue];
-        self.sessionInputHeaderView.nim_top = frame.origin.y - self.sessionInputHeaderView.nim_height;
     }
 }
 
@@ -179,8 +167,6 @@
     
     [self changeLeftBarBadge:self.conversationManager.allUnreadCount];
     [self.interactor resetLayout];
-    
-//    self.sessionInputHeaderView.frame = CGRectMake(0, self.sessionInputView.nim_top, self.view.nim_width, 30);
 }
 
 

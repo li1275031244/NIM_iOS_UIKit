@@ -59,11 +59,13 @@
     NIMSession *session    = vc.session;
     id<NIMSessionConfig> sessionConfig = vc.sessionConfig;
     UITableView *tableView  = vc.tableView;
+    UIView *inputHeaderView  = vc.sessionInputHeaderView;
     NIMInputView *inputView = vc.sessionInputView;
     
     NIMSessionDataSourceImpl *datasource = [[NIMSessionDataSourceImpl alloc] initWithSession:session config:sessionConfig];
     NIMSessionLayoutImpl *layout         = [[NIMSessionLayoutImpl alloc] initWithSession:session config:sessionConfig];
     layout.tableView = tableView;
+    layout.inputHeaderView = inputHeaderView;
     layout.inputView = inputView;
     
     

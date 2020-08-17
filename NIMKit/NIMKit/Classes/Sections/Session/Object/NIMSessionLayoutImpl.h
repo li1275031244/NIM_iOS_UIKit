@@ -13,6 +13,8 @@
 
 @property (nonatomic,strong)  UITableView *tableView;
 
+@property (nonatomic,strong)  UIView *inputHeaderView;
+
 @property (nonatomic,strong)  NIMInputView *inputView;
 
 - (instancetype)initWithSession:(NIMSession *)session
