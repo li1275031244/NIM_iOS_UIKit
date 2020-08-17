@@ -148,7 +148,7 @@
     visiableHeight = visiableHeight + self.tableView.contentSize.height + contentInsets.top + contentInsets.bottom;
     visiableHeight = MIN(visiableHeight, rect.size.height);
     
-    rect.origin.y    = containerSafeHeight - visiableHeight - self.inputView.nim_height;
+    rect.origin.y    = containerSafeHeight - visiableHeight - self.inputView.nim_height - self.inputHeaderView.nim_height;
     rect.origin.y    = rect.origin.y > 0? 0 : rect.origin.y;
     
     
@@ -175,6 +175,7 @@
         return;
     }
     [self.inputView sizeToFit];
+    [self.inputHeaderView sizeToFit];
 }
 
 

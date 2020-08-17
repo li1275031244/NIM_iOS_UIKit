@@ -127,7 +127,7 @@
         
         self.sessionInputHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.nim_width, 40)];
         self.sessionInputHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-        self.sessionInputHeaderView.backgroundColor = [UIColor redColor];
+        self.sessionInputHeaderView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_sessionInputHeaderView];
     }
 }
